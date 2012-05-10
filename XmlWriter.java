@@ -112,7 +112,7 @@ public class XmlWriter {
      * @param String name of entity.
      */
     public XmlWriter writeEntity(String name) throws IOException {
-    	closeOpeningTag();
+    	closeOpeningTag(true);
         this.closed = false;
         for(int tabIndex=0; tabIndex<stack.size()+indentingOffset;tabIndex++)
         	this.writer.write("\t");
@@ -124,11 +124,12 @@ public class XmlWriter {
     }
 
     // close off the opening tag
-    private void closeOpeningTag() throws IOException {
+    private void closeOpeningTag(final boolean newLine) throws IOException {
         if (!this.closed) {
             writeAttributes();
             this.closed = true;
-            this.writer.write(">\n");
+            this.writer.write(">");
+            if (newLine) this.writer.write("\n");
         }
     }
 
@@ -206,7 +207,7 @@ public class XmlWriter {
      * Output body text. Any xml characters are escaped. 
      */
     public XmlWriter writeText(String text) throws IOException {
-    	closeOpeningTag();
+    	closeOpeningTag(false);
         this.empty = false;
         this.writer.write(escapeXml(text));
         return this;
